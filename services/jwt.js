@@ -1,8 +1,10 @@
 'use strict'
 
-var jwt = require('jwt-simple');
-var moment = require('moment');
-var secret = 'miClaseSecreta';
+require('dotenv').config();
+const jwt = require('jwt-simple');
+const moment = require('moment');
+
+const secret = process.env.JWT_SECRET;
 
 exports.createToken = function(user){
     var payload = {

@@ -58,9 +58,9 @@ function saveUser(req, res) {
 }
 
 function login(req, res) {
-    var params = req.body;
-    var email = params.email;
-    var password = params.password;
+    const params = req.body;
+    const email = params.email;
+    const password = params.password;
 
     User.findOne({ email: email.toLowerCase() }, (err, user) => {
         if (err) {
