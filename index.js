@@ -2,13 +2,16 @@
 
 const mongoose = require('mongoose');
 const app = require('./app');
-const port = process.env.PORT || 3000;
+const config = require('./config');
 
-mongoose.connect('mongodb://localhost:27017/zoo',{useNewUrlParser:true, useUnifiedTopology:true})
+const {EXPRESS_PORT, DATABASE_URL, NODE_ENV, JWT_SECRET} =  config;
+console.log(JWT_SECRET)
+
+mongoose.connect(`${DATABASE_URL}`,{useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=>{
     console.log('La conexión a la bbdd Zoo se ha realizado correctamente...');
-    app.listen(port, ()=>{
-        console.log('El servidor node local y express se está ejecutando correctamente...');
+    app.listen(EXPRESS_PORT, ()=>{
+        console.log(`Express se está ejecutando en el entorno "${NODE_ENV}", en el puerto ${EXPRESS_PORT}...`);
     });
 })
 .catch(err=>{
