@@ -3,4 +3,6 @@
 
 # misc
 .env
+development.env
+production.env
 .DS_Store

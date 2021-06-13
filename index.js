@@ -3,9 +3,7 @@
 const mongoose = require('mongoose');
 const app = require('./app');
 const config = require('./config');
-
-const {EXPRESS_PORT, DATABASE_URL, NODE_ENV, JWT_SECRET} =  config;
-console.log(JWT_SECRET)
+const {EXPRESS_PORT, DATABASE_URL, NODE_ENV} =  config;
 
 mongoose.connect(`${DATABASE_URL}`,{useNewUrlParser:true, useUnifiedTopology:true})
 .then(()=>{

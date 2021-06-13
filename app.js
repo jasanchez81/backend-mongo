@@ -15,14 +15,11 @@ const userRoutes = require('./routes/user');
 //Rutas base
 app.use('/api', userRoutes);
 
-
 module.exports = app;
-
 
 
 /*
 const jwt = require('jsonwebtoken')
-const config = require('./config')
 const tokenList = {}
 const app.use(express.static('public'));
 */

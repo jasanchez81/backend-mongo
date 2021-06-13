@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "local": "set NODE_ENV=local&& node index.js",
-    "dev": "set NODE_ENV=development&& node index.js",
-    "prod": "set NODE_ENV=production&& node index.js"
+    "local": "set NODE_ENV=local&& nodemon index.js",
+    "dev": "set NODE_ENV=development&& nodemon index.js",
+    "prod": "set NODE_ENV=production&& nodemon index.js"
   },
   "author": "Johann sanchez",
   "license": "MIT",
