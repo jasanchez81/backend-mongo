@@ -1,16 +1,28 @@
 'use strict'
 
 //modulos
-var bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt-nodejs');
 
 //servicio jwt
-var jwt = require('../services/jwt');
+const jwtService = require('../services/jwt');
+
+//package jsonwebtoken
+const jwtToken = require('jsonwebtoken');
+
+const config = require('../config');
+const { JWT_SECRET } = config;
+
 
 //modelos
-var User = require('../models/user');
+const User = require('../models/user');
+const { urlencoded } = require('express');
 
 //acciones
-function saveUser(req, res) {
+function prueba(req,res){
+    res.status(200).send({ message: 'Pruebas del controlador.' });
+}
+
+function saveUser(req, res){
     //Creamos una instancia User
     var user = new User();
 
@@ -25,6 +37,7 @@ function saveUser(req, res) {
         user.email = params.email;
         user.role = 'ROLE_USER';
         user.image = null;
+        user.refreshToken = [];
 
         User.findOne({ email: user.email.toLowerCase() }, (err, issetUser) => {
             if (err) {
@@ -34,7 +47,11 @@ function saveUser(req, res) {
                     //Ciframos la contraseña
                     bcrypt.hash(params.password, null, null, (err, hash) => {
                         user.password = hash;
-                        //Guardamos el usuario en bbdd . mongoose
+
+                        //Guardamos el refresh token en el usuario
+                        // user.refreshToken.push(jwtService.generateRefreshToken(res));
+
+                        //Guardamos el usuario en bbdd. mongoose
                         user.save((err, userStored) => {
                             if (err) {
                                 res.status(500).send({ message: 'Error al guardar el usuario.' });
@@ -57,7 +74,7 @@ function saveUser(req, res) {
     }
 }
 
-function login(req, res) {
+function login(req, res){
     const params = req.body;
     const email = params.email;
     const password = params.password;
@@ -69,14 +86,33 @@ function login(req, res) {
             if (user) {
                 bcrypt.compare(password, user.password, (err, check) => {
                     if (check) {
+
+                        //Guardamos el refresh token en el usuario
+                        user.refreshToken.push(jwtService.createToken(user));
+
+                        //Guardamos el usuario en bbdd. mongoose
+                        user.save((err, userStored) => {
+                            if (err) {
+                                res.status(500).send({ message: 'Error al guardar el usuario.' });
+                            } else {
+                                if (!userStored) {
+                                    res.status(400).send({ message: 'No se ha registrado al usuario.' });
+                                } else {
+                                    res.status(200).send({ user: userStored });
+                                }
+                            }
+                        })
+
                         //Comprobamos y generamos el token
-                        if (params.getToken) {
-                            //devolver el token
-                            res.status(200).send({ token: jwt.createToken(user) });
-                        } else {
-                            res.status(200).send({ user });
-                        }
-                    }else{
+                        // res.status(200).send(jwtService.createToken(user));
+
+                        // if (params.getToken) {
+                        //     //devolver el token
+                        //     res.status(200).send({ message: 'Autenticación correcta.', token: token });
+                        // } else {
+                        //     res.status(200).send({ user });
+                        // }
+                    } else {
                         res.status(404).send({ message: 'El usuario no ha podido loguearse correctamente.' });
                     }
                 });
@@ -90,5 +126,6 @@ function login(req, res) {
 
 module.exports = {
     saveUser,
-    login
+    login,
+    prueba
 }

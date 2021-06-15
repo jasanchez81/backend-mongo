@@ -1,16 +1,21 @@
 'use strict'
 
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const app = express();
 
 //Express >= 4.16.0
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: false}));
+app.use(cookieParser());
+
+//Configuración de cabeceras y CORS
+app.use(cors());
 
 //Carga de rutas
 const userRoutes = require('./routes/user');
 
-//Configuración de cabeceras y CORS
 
 //Rutas base
 app.use('/api', userRoutes);
@@ -18,8 +23,4 @@ app.use('/api', userRoutes);
 module.exports = app;
 
 
-/*
-const jwt = require('jsonwebtoken')
-const tokenList = {}
-const app.use(express.static('public'));
-*/
+//const app.use(express.static('public'));
